@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<style>
+#chart_container {
+        position: relative;
+        font-family: Arial, Helvetica, sans-serif;
+}
+#chart {
+        position: relative;
+        left: 40px;
+}
+#y_axis {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 40px;
+}
+</style>
+
+
+<div class="row">
+    <div id="legend" class="col-md-2"></div>
+    <div id="chart_container" class="col-md-10">
+        <div id="y_axis"></div>
+        <div id="chart"></div>
+    </div>
+
+</div>
+
+<div class="row">
+    <div id="timeline"></div>
+    <div id="preview"></div>
+</div>
+
+<div class="row">
+    <div class="col-md-12"></div>
+    <a class="btn btn-warning" href="{{ url_for('reset') }}">Reset data</a>
+    </div>
+</div>
+
+
+<script>
+var seriesData = [
+    [{% for r in res %}{x: {{ r.time }}, y: {{ r.vms }} } {{ "," if not loop.last }}{% endfor %}],
+    [{% for r in res %}{x: {{ r.time }}, y: {{ r.cpus }} } {{ "," if not loop.last }}{% endfor %}],
+    [{% for r in res %}{x: {{ r.time }}, y: {{ r.mem }} } {{ "," if not loop.last }}{% endfor %}]
+    ]
+
+var graph = new Rickshaw.Graph( {
+        element: document.querySelector("#chart"),
+        renderer: 'line',
+        width: 800,
+        height: 240,
+        max: 10,
+        series: [ 
+            {
+                color: "steelblue",
+                data: seriesData[0],
+                name: 'Number of VMs' 
+            }
+                /*data: [ { x: -1893456000, y: 92228531 }, { x: -1577923200, y: 106021568 }, { x: -1262304000, y: 123202660 }, { x: -946771200, y: 132165129 }, { x: -631152000, y: 151325798 }, { x: -315619200, y: 179323175 }, { x: 0, y: 203211926 }, { x: 315532800, y: 226545805 }, { x: 631152000, y: 248709873 }, { x: 946684800, y: 281421906 }, { x: 1262304000, y: 308745538 } ], 
+                color: 'steelblue'
+        }*/
+        ]
+} );
+
+var x_axis = new Rickshaw.Graph.Axis.Time( {
+        graph: graph,
+        timeFixture: new Rickshaw.Fixtures.Time.Local()
+} );
+
+var y_axis = new Rickshaw.Graph.Axis.Y( {
+        graph: graph,
+        orientation: 'left',
+        tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+        element: document.getElementById('y_axis'),
+} );
+
+graph.render();
+
+var legend = new Rickshaw.Graph.Legend( {
+    graph: graph,
+    element: document.getElementById('legend')
+
+} );
+
+
+
+</script>
+
+<!-- 
+<script>
+var seriesData = [
+    [{% for r in res %}{x: {{ r.time }}, y: {{ r.vms }} } {{ "," if not loop.last }}{% endfor %}],
+    [{% for r in res %}{x: {{ r.time }}, y: {{ r.cpus }} } {{ "," if not loop.last }}{% endfor %}],
+    [{% for r in res %}{x: {{ r.time }}, y: {{ r.mem }} } {{ "," if not loop.last }}{% endfor %}]
+    ]
+
+/*
+var random = new Rickshaw.Fixtures.RandomData(150);
+
+for (var i = 0; i < 150; i++) {
+    random.addData(seriesData);
+}
+*/
+
+
+var graph = new Rickshaw.Graph( {
+        element: document.querySelector("#chart"),
+        renderer: 'line',
+        /* width: 900, */
+        height: 250,
+        series: [
+            {
+                color: "#c05020",
+                data: seriesData[0],
+                name: 'Number of VMs' 
+            }, {
+                color: "#30c020",
+                data: seriesData[1],
+                name: 'CPUs' 
+            }, {
+                color: "#6060c0",
+                data: seriesData[2],
+                name: 'Memory' 
+            }
+         ]
+});
+graph.render();
+
+/*
+var preview = new Rickshaw.Graph.RangeSlider( {
+    graph: graph,
+    element: document.getElementById('preview'),
+} );
+*/
+
+var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+    graph: graph,
+    xFormatter: function(x) {
+        return new Date(x * 1000).toString();
+    }
+} );
+
+/*
+var annotator = new Rickshaw.Graph.Annotate( {
+    graph: graph,
+    element: document.getElementById('timeline')
+} );
+*/
+
+var legend = new Rickshaw.Graph.Legend( {
+    graph: graph,
+    element: document.getElementById('legend')
+
+} );
+
+var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
+    graph: graph,
+    legend: legend
+} );
+
+var order = new Rickshaw.Graph.Behavior.Series.Order( {
+    graph: graph,
+    legend: legend
+} );
+
+var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight( {
+    graph: graph,
+    legend: legend
+} );
+
+var ticksTreatment = 'glow';
+
+var xAxis = new Rickshaw.Graph.Axis.Time( {
+    graph: graph,
+    /* ticksTreatment: ticksTreatment, */
+    timeFixture: new Rickshaw.Fixtures.Time.Local()
+} );
+
+xAxis.render();
+
+var yAxis = new Rickshaw.Graph.Axis.Y( {
+    graph: graph,
+    tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+    orientation: 'left',
+    element: document.getElementById('y_axis'),
+
+
+    /* ticksTreatment: ticksTreatment */
+} );
+
+yAxis.render();
+
+</script>
+-->
+{% endblock %}
