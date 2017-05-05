@@ -21,7 +21,12 @@
 
 
 <div class="row">
-    <div id="legend" class="col-md-2"></div>
+    <div class="col-md-2">
+        <div class="text-center">
+            <img src="https://egi.eu/wp-content/uploads/2016/05/cropped-logo_site-1-300x300.png" alt="Logo" style="height: 60px;">
+        </div>
+        <div id="legend"></div>
+    </div>
     <div id="chart_container" class="col-md-10">
         <div id="y_axis"></div>
         <div id="chart"></div>
@@ -86,6 +91,9 @@ var legend = new Rickshaw.Graph.Legend( {
 
 } );
 
+var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+	graph: graph
+} );
 
 
 </script>
