@@ -1,0 +1,18 @@
+[Unit]
+Description=uWSGI instance to serve vmmon
+After=network.target
+
+[Service]
+# Owner of the source files
+User=xxxx
+# Set to nginx group to allow accessing the uwsgi socket
+Group=www-data
+# Path to the source files
+WorkingDirectory=/home/xxxx/repos/vmmon
+# Python virtualenv added to the PATH
+Environment="PATH=/home/xxxx/venv/vmmon/bin:/usr/bin"
+# Launch of the uwsgi binary from the virtualenv
+ExecStart=/home/xxxx/venv/vmmon/bin/uwsgi --ini vmmon_uwsgi.ini
+
+[Install]
+WantedBy=multi-user.target
